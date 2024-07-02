@@ -19,11 +19,12 @@ export const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 16px;
   }
 `
 
 export const Form = styled.form`
-  max-width: 550px;
+  max-width: 475px;
   margin: 38px auto;
 
   > header {
