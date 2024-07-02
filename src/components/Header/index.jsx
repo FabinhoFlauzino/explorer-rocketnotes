@@ -1,20 +1,25 @@
 import { useAuth } from "../../hooks/auth";
+import { api } from "../../services/api";
 import { Container, Profile, Logout } from "../Header/styles";
 import { RiShutDownLine } from "react-icons/ri";
+import avatarPlaceholder from "../../assets/avatar_placeholder.svg";
 
 export function Header() {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const avatarUrl = user.avatar
+  ? `${api.defaults.baseURL}/files/${user.avatar}`
+  : avatarPlaceholder;
 
   return (
     <Container>
       <Profile to="/profile">
         <img
-          src="https://github.com/fabinhoflauzino.png"
-          alt="Imagem do usuário"
+          src={avatarUrl}
+          alt={`Imagem de ${user.name}`}
         />
         <div>
           <span>Bem-vindo</span>
-          <strong>Fabinho Flauzino</strong>
+          <strong>{user.name}</strong>
         </div>
       </Profile>
 

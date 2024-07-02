@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
+  padding-bottom: 60px;
   > header {
     width: 100%;
     height: 144px;
@@ -36,6 +37,8 @@ export const Avatar = styled.div`
     border-radius: 50%;
     width: 186px;
     height: 186px;
+    object-fit: cover;
+    object-position: center;
   }
 
   > label {
