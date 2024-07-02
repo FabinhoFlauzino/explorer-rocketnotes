@@ -19,6 +19,10 @@ export default createGlobalStyle`
     text-decoration: none;
   }
 
+  ul {
+    list-style: none;
+  }
+
   button, a {
     cursor: pointer;
     transition: filter 0.2s;
