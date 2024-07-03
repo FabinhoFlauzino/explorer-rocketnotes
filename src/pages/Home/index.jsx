@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
@@ -7,17 +8,31 @@ import { Section } from "../../components/Section";
 import { Note } from "../../components/Note";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const [tags, setTags] = useState([]);
   const [tagsSelected, setTagsSelected] = useState([]);
+  const [search, setSearch] = useState("");
+  const [notes, setNotes] = useState([]);
+
+  const navigate = useNavigate()
+
+  function handleDetails(id) {
+    navigate(`/details/${id}`);
+  }
 
   function handleTagSelected(tagName) {
+    setSearch("")
+    if(tagName === "all") {
+      return setTagsSelected([]);
+    }
+
     const alreadySelected = tagsSelected.includes(tagName);
 
-    if(alreadySelected) {
-      const filteredTags = tagsSelected.filter((tag) => tag !== tagName)
-      setTagsSelected(filteredTags)
+    if (alreadySelected) {
+      const filteredTags = tagsSelected.filter((tag) => tag !== tagName);
+      setTagsSelected(filteredTags);
     } else {
       setTagsSelected((prevState) => [...prevState, tagName]);
     }
@@ -32,6 +47,17 @@ export function Home() {
 
     fetchTags();
   }, []);
+
+  useEffect(() => {
+    async function fetchNotes() {
+      const response = await api.get(`/notes?title=${search}&tags=${tagsSelected}`);
+      setNotes(response.data);
+    }
+
+    fetchNotes()
+  }, [tagsSelected, search]);
+
+
   return (
     <Container>
       <Brand>
@@ -61,20 +87,23 @@ export function Home() {
       </Menu>
 
       <Search>
-        <Input placeholder="Pesquisar pelo título" icon={FiSearch} />
+        <Input
+          value={search}
+          placeholder="Pesquisar pelo título"
+          icon={FiSearch}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </Search>
 
       <Content>
         <Section title="Minhas notas">
-          <Note
-            data={{
-              title: "React",
-              tags: [
-                { id: "1", name: "React" },
-                { id: "2", name: "Express" },
-              ],
-            }}
-          />
+          {notes && notes.map((note) => (
+            <Note
+              key={String(note.id)}
+              data={note}
+              onClick={() => handleDetails(note.id)}
+            />
+          ))}
         </Section>
       </Content>
 
